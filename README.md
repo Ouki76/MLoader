@@ -12,7 +12,7 @@
 - Open **MLoader.code-workspace** in [Visual Studio Code](https://code.visualstudio.com/).
 - Install dependencies
 
-### Build C++
+### C++
 
 Configuration:
 ```console
@@ -24,7 +24,7 @@ Build:
 cmake --build .
 ```
 
-### Build Rust
+### Rust
 Build:
 ```console
 cargo build
