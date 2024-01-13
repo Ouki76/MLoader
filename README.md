@@ -8,19 +8,31 @@
   
 - [Rust](https://www.rust-lang.org/)
 
-### Compiling from source
+## Compiling from source
 - Open **MLoader.code-workspace** in [Visual Studio Code](https://code.visualstudio.com/).
 - Install dependencies
 
-Build C++:
+### Build C++
+
+Configuration:
 ```console
 cmake .
-cmake --build
 ```
 
-Build Rust:
+Build:
+```console
+cmake --build .
+```
+
+### Build Rust
+Build:
 ```console
 cargo build
+```
+
+Run:
+```console
+cargo run
 ```
 
 ## Libraries
