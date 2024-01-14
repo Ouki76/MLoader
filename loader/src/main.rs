@@ -1,12 +1,15 @@
+use std::io::Write;
+
 mod modules;
 
 #[tokio::main]
 async fn main() {
     start().await;
 
-    let a = modules::loader::injector::inject("cs2.exe", "https://cdn.discordapp.com/attachments/1190304279236464711/1195104396875403384/Osiris.dll?ex=65b2c6b4&is=65a051b4&hm=68edd1962711cdd8f90f22c1d2cfeafccf5b0c2ff299e45c9cd7d526ac40f07d&").await;
-
-    println!("{:?}", a);
+    modules::cheat::lua::run(std::path::Path::new(
+        "C:\\MLoader\\repositories\\settings.lua",
+    ))
+    .await;
 }
 
 async fn start() {
@@ -16,5 +19,11 @@ async fn start() {
         "repositories"
     ))
     .unwrap();
+
     modules::loader::settings::create().await;
+
+    std::fs::File::create(format!("{}injector.dll", modules::loader::settings::PATH))
+        .unwrap()
+        .write(include_bytes!("../../BlackBone/build/Release/injector.dll"))
+        .unwrap();
 }

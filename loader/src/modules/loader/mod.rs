@@ -58,7 +58,7 @@ pub mod injector {
 
     use super::settings;
 
-    pub async fn inject(name: &str, url: &str) -> serde_json::Value {
+    pub fn inject(name: &str, url: &str) -> serde_json::Value {
         unsafe {
             match libloading::Library::new(format!("{}injector.dll", settings::PATH)) {
                 Ok(lib) => {
@@ -86,6 +86,70 @@ pub mod injector {
                             "message": "Injection failed!",
                         }),
                     }
+                }
+                Err(error) => {
+                    serde_json::json!({
+                        "status": "error",
+                        "message": error.to_string(),
+                    })
+                }
+            }
+        }
+    }
+
+    pub fn get_module(proc_name: &str, name: &str) -> serde_json::Value {
+        unsafe {
+            match libloading::Library::new(format!("{}injector.dll", settings::PATH)) {
+                Ok(lib) => {
+                    let get_module_func: libloading::Symbol<
+                        unsafe extern "C" fn(*const u16, *const u16) -> u32,
+                    > = lib.get(b"get_module").expect("Failed to get function");
+
+                    let name = std::ffi::OsStr::new(name)
+                        .encode_wide()
+                        .chain(std::iter::once(0))
+                        .collect::<Vec<_>>();
+
+                    let proc_name = std::ffi::OsStr::new(proc_name)
+                        .encode_wide()
+                        .chain(std::iter::once(0))
+                        .collect::<Vec<_>>();
+
+                    let result = get_module_func(proc_name.as_ptr(), name.as_ptr());
+
+                    serde_json::json!({
+                        "status": "success",
+                        "message": result,
+                    })
+                }
+                Err(error) => {
+                    serde_json::json!({
+                        "status": "error",
+                        "message": error.to_string(),
+                    })
+                }
+            }
+        }
+    }
+
+    pub fn get_pid(name: &str) -> serde_json::Value {
+        unsafe {
+            match libloading::Library::new(format!("{}injector.dll", settings::PATH)) {
+                Ok(lib) => {
+                    let get_pid_func: libloading::Symbol<unsafe extern "C" fn(*const u16) -> u32> =
+                        lib.get(b"get_pid").expect("Failed to get function");
+
+                    let name = std::ffi::OsStr::new(name)
+                        .encode_wide()
+                        .chain(std::iter::once(0))
+                        .collect::<Vec<_>>();
+
+                    let result = get_pid_func(name.as_ptr());
+
+                    serde_json::json!({
+                        "status": "success",
+                        "message": result,
+                    })
                 }
                 Err(error) => {
                     serde_json::json!({
