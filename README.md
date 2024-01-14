@@ -41,6 +41,7 @@ cargo run
 - [WNetWrap](https://github.com/hack-tramp/WNetWrap)
 
 ### Rust
+- [tauri](https://tauri.app/)
 - [serde](https://github.com/serde-rs/serde)
 - [serde_json](https://github.com/serde-rs/json)
 - [tokio](https://github.com/tokio-rs/tokio)

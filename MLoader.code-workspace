@@ -99,7 +99,8 @@
 			"ms-vscode.cpptools-extension-pack",
 			"ms-vscode.cmake-tools",
 			"vadimcn.vscode-lldb",
-			"rust-lang.rust-analyzer"
+			"rust-lang.rust-analyzer",
+			"tauri-apps.tauri-vscode"
 		]
 	}
 }

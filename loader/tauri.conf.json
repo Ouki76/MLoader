@@ -1,0 +1,46 @@
+{
+    "build": {
+        "beforeDevCommand": "",
+        "beforeBuildCommand": "",
+        "devPath": "./tauri/web",
+        "distDir": "./tauri/web",
+        "withGlobalTauri": true
+    },
+    "package": {
+        "productName": "MLoader",
+        "version": "0.0.0"
+    },
+    "tauri": {
+        "allowlist": {
+            "all": false,
+            "shell": {
+                "all": false,
+                "open": true
+            }
+        },
+        "bundle": {
+            "active": true,
+            "targets": "all",
+            "identifier": "MLoader",
+            "icon": [
+                "./tauri/assets/icons/32x32.png",
+                "./tauri/assets/icons/128x128.png",
+                "./tauri/assets/icons/128x128@2x.png",
+                "./tauri/assets/icons/icon.icns",
+                "./tauri/assets/icons/icon.ico"
+            ]
+        },
+        "security": {
+            "csp": null
+        },
+        "windows": [
+            {
+                "fullscreen": false,
+                "resizable": true,
+                "title": "MLoader",
+                "width": 800,
+                "height": 600
+            }
+        ]
+    }
+}
