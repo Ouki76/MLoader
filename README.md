@@ -46,3 +46,7 @@ cargo run
 - [tokio](https://github.com/tokio-rs/tokio)
 - [libloading](https://github.com/nagisa/rust_libloading/)
 - [git2](https://github.com/rust-lang/git2-rs)
+- [rlua](https://github.com/amethyst/rlua)
+
+### Lua
+- [json](https://github.com/rxi/json.lua)
