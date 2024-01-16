@@ -1,7 +1,7 @@
 pub mod lua {
     use std::io::Read;
 
-    use rlua;
+    use rlua::{self, ToLua, ToLuaMulti};
 
     use crate::modules::loader::injector;
 
@@ -62,6 +62,12 @@ pub mod lua {
                 .unwrap();
 
             ctx.globals().set("Utils", utils_table).unwrap();
+
+            let json_library = ctx.load(include_str!("json.lua")).into_function().unwrap();
+
+            ctx.globals().set("json", json_library).unwrap();
+
+            ctx.load("json = json()").exec().unwrap();
 
             ctx.load(&script).exec().unwrap();
         });

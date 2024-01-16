@@ -11,17 +11,17 @@ fn greet(name: &str) -> String {
 
 #[tokio::main]
 async fn main() {
-    tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
-
     start().await;
 
     // modules::cheat::lua::run(std::path::Path::new(
     //     "C:\\MLoader\\repositories\\settings.lua",
     // ))
     // .await;
+
+    tauri::Builder::default()
+        .invoke_handler(tauri::generate_handler![greet])
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
 }
 
 async fn start() {

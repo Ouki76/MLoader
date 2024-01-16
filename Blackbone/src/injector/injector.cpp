@@ -62,11 +62,14 @@ namespace Injector
         {
         case STATUS_SUCCESS:
         {
-            return static_cast<DWORD>(proc.modules().GetModule(name).get()->baseAddress);
+            if (auto proc_module = proc.modules().GetModule(name); proc_module)
+                return static_cast<DWORD>(proc_module.get()->baseAddress);
+            else
+                return 0;
         }
         default:
         {
-            return 0x0;
+            return 0;
         }
         }
     }
