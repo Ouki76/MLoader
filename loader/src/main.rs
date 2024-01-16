@@ -4,22 +4,15 @@ use std::io::Write;
 
 mod modules;
 
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
-
 #[tokio::main]
 async fn main() {
     start().await;
 
-    // modules::cheat::lua::run(std::path::Path::new(
-    //     "C:\\MLoader\\repositories\\settings.lua",
-    // ))
-    // .await;
-
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet])
+        .invoke_handler(tauri::generate_handler![
+            modules::cheat::parser::get_repos_json,
+            modules::cheat::lua::run_script
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

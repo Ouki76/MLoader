@@ -76,16 +76,13 @@ pub mod injector {
 
                     let result = inject_func(name.as_ptr(), url.as_ptr().cast());
 
-                    match result {
-                        true => serde_json::json!({
-                            "status": "success",
-                            "message": "Injection successful!",
-                        }),
-                        false => serde_json::json!({
-                            "status": "error",
-                            "message": "Injection failed!",
-                        }),
-                    }
+                    serde_json::json!({
+                        "status": "success",
+                        "message": match result {
+                            true => "Injection successful!",
+                            false => "Injection failed!",
+                        },
+                    })
                 }
                 Err(error) => {
                     serde_json::json!({

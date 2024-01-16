@@ -4,15 +4,35 @@ let greetInputEl;
 let greetMsgEl;
 
 async function greet() {
-  // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-  greetMsgEl.textContent = await invoke("greet", { name: greetInputEl.value });
+  await invoke("get_repos_json")
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-  greetInputEl = document.querySelector("#greet-input");
-  greetMsgEl = document.querySelector("#greet-msg");
-  document.querySelector("#greet-form").addEventListener("submit", (e) => {
-    e.preventDefault();
-    greet();
-  });
+document.getElementById("home-button").addEventListener("click", async () => {
+  const topContainer = document.querySelector(".top-container .content");
+
+  topContainer.innerHTML = "";
+
+  let repos = JSON.parse(await invoke("get_repos_json"));
+
+  for (const repo of repos) {
+    const cheat = document.createElement("div");
+
+    const name = document.createElement("p");
+
+    name.textContent = repo.name;
+
+    cheat.appendChild(name);
+
+    const injectButton = document.createElement("button");
+
+    injectButton.textContent = "Inject";
+
+    injectButton.addEventListener("click", async () => {
+      await invoke("run_script", { path: repo.path + "\\" + repo.injectorScript });
+    });
+
+    cheat.appendChild(injectButton);
+
+    topContainer.appendChild(cheat);
+  }
 });

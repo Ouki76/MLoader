@@ -1,0 +1,42 @@
+.top-container .content {
+    margin: 15px;
+}
+
+.top-container .content .cheat {
+    background-color: brown;
+
+    border-radius: 8px;
+
+    padding: 5px;
+}
+
+.bottom-container .left,
+.bottom-container .right {
+    flex: 1;
+    margin: 15px;
+}
+
+.bottom-container .right {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.bottom-container button {
+    position: relative;
+
+    width: 8vh;
+    height: 8vh;
+
+    border-radius: var(--border-radius);
+}
+
+.bottom-container button img {
+    width: 4vh;
+    height: 4vh;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+}

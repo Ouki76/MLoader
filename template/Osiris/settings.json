@@ -1,0 +1,5 @@
+{
+    "name": "Osiris",
+    "description": "Osiris the best cheat",
+    "injectorScript": "inject.lua"
+}

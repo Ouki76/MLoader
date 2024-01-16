@@ -5,7 +5,12 @@ pub mod lua {
 
     use crate::modules::loader::injector;
 
-    pub async fn run(path: &std::path::Path) {
+    #[tauri::command]
+    pub async fn run_script(path: String) {
+        println!("Running script: {}", path);
+
+        let path = std::path::Path::new(path.as_str());
+
         let lua = rlua::Lua::new();
 
         let mut file = std::fs::File::open(path).unwrap();
@@ -71,5 +76,58 @@ pub mod lua {
 
             ctx.load(&script).exec().unwrap();
         });
+    }
+}
+
+pub mod parser {
+    use crate::modules::loader::settings;
+    use walkdir::WalkDir;
+
+    pub async fn get_active_repos() -> Vec<String> {
+        let mut repos = Vec::<String>::new();
+
+        for entry in WalkDir::new(format!("{}repositories", settings::PATH))
+            .into_iter()
+            .filter(|entry| entry.is_ok())
+            .map(|entry| entry.unwrap())
+        {
+            if entry.file_name() == "settings.json" {
+                repos.push(entry.path().display().to_string());
+            }
+        }
+
+        repos
+    }
+
+    #[tauri::command]
+    pub async fn get_repos_json() -> String {
+        let repos = get_active_repos();
+
+        // let jsons = repos
+        //     .await
+        //     .iter()
+        //     .map(|repo| serde_json::from_str(&std::fs::read_to_string(repo).unwrap()).unwrap())
+        //     .collect::<Vec<serde_json::Value>>();
+
+        let jsons = repos
+            .await
+            .iter()
+            .map(|repo| {
+                let mut repo_json: serde_json::Value =
+                    serde_json::from_str(&std::fs::read_to_string(repo).unwrap()).unwrap();
+
+                let path = std::path::Path::new(repo.as_str())
+                    .parent()
+                    .clone()
+                    .map(|parent| parent.to_path_buf())
+                    .unwrap_or_default();
+
+                repo_json["path"] = serde_json::Value::String(path.to_str().unwrap().to_string());
+
+                repo_json
+            })
+            .collect::<Vec<serde_json::Value>>();
+
+        serde_json::to_string(&jsons).unwrap()
     }
 }
