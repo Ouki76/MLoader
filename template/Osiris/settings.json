@@ -1,5 +1,6 @@
 {
     "name": "Osiris",
     "description": "Osiris the best cheat",
-    "injectorScript": "inject.lua"
+    "injectorScript": "./assets/inject.lua",
+    "pageScript": "./assets/page.js"
 }

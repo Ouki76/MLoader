@@ -3,6 +3,8 @@
     font-size: 16px;
 
     --border-radius: 8px;
+
+    user-select: none;
 }
 
 body {

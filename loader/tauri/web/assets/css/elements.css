@@ -1,5 +1,7 @@
 .top-container .content {
-    margin: 15px;
+    display: flex;
+
+    flex-grow: 2;
 }
 
 .top-container .content .cheat {
@@ -8,6 +10,10 @@
     border-radius: 8px;
 
     padding: 5px;
+
+    margin: 15px;
+
+    width: 100%;
 }
 
 .bottom-container .left,

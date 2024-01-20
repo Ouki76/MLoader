@@ -80,6 +80,8 @@ pub mod lua {
 }
 
 pub mod parser {
+    use std::{fmt::format, io::Read};
+
     use crate::modules::loader::settings;
     use walkdir::WalkDir;
 
