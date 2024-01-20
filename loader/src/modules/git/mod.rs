@@ -116,7 +116,10 @@ pub mod utils {
     use git2;
 
     use super::repo;
-    use crate::modules::loader::settings;
+    use crate::modules::{
+        cheat::{self, parser},
+        loader::settings,
+    };
 
     pub async fn add(url: &str) -> serde_json::Value {
         repo::clone(url).await;

@@ -10,7 +10,7 @@ async fn main() {
 
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
-            modules::cheat::parser::get_repos_json,
+            modules::cheat::parser::get_cheats_json,
             modules::cheat::lua::run_script,
             modules::utils::fs::get_file_content
         ])

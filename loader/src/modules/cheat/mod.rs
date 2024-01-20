@@ -7,8 +7,6 @@ pub mod lua {
 
     #[tauri::command]
     pub async fn run_script(path: String) {
-        println!("Running script: {}", path);
-
         let path = std::path::Path::new(path.as_str());
 
         let lua = rlua::Lua::new();
@@ -80,13 +78,14 @@ pub mod lua {
 }
 
 pub mod parser {
-    use std::{fmt::format, io::Read};
 
     use crate::modules::loader::settings;
     use walkdir::WalkDir;
 
-    pub async fn get_active_repos() -> Vec<String> {
-        let mut repos = Vec::<String>::new();
+    use git2;
+
+    pub async fn get_active_cheats() -> Vec<String> {
+        let mut cheats = Vec::<String>::new();
 
         for entry in WalkDir::new(format!("{}repositories", settings::PATH))
             .into_iter()
@@ -94,24 +93,18 @@ pub mod parser {
             .map(|entry| entry.unwrap())
         {
             if entry.file_name() == "settings.json" {
-                repos.push(entry.path().display().to_string());
+                cheats.push(entry.path().display().to_string());
             }
         }
 
-        repos
+        cheats
     }
 
     #[tauri::command]
-    pub async fn get_repos_json() -> String {
-        let repos = get_active_repos();
+    pub async fn get_cheats_json() -> String {
+        let cheats = get_active_cheats();
 
-        // let jsons = repos
-        //     .await
-        //     .iter()
-        //     .map(|repo| serde_json::from_str(&std::fs::read_to_string(repo).unwrap()).unwrap())
-        //     .collect::<Vec<serde_json::Value>>();
-
-        let jsons = repos
+        let jsons = cheats
             .await
             .iter()
             .map(|repo| {
@@ -125,6 +118,11 @@ pub mod parser {
                     .unwrap_or_default();
 
                 repo_json["path"] = serde_json::Value::String(path.to_str().unwrap().to_string());
+
+                repo_json["type"] = serde_json::Value::String(match git2::Repository::open(repo) {
+                    Ok(_) => "git".to_string(),
+                    Err(_) => "local".to_string(),
+                });
 
                 repo_json
             })

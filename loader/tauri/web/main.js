@@ -1,20 +1,13 @@
 const { invoke } = window.__TAURI__.tauri;
 
-let greetInputEl;
-let greetMsgEl;
-
-async function greet() {
-  await invoke("get_repos_json")
-}
-
 document.getElementById("home-button").addEventListener("click", async () => {
   const topContainer = document.querySelector(".top-container .content");
 
   topContainer.innerHTML = "";
 
-  let repos = JSON.parse(await invoke("get_repos_json"));
+  let cheats = JSON.parse(await invoke("get_cheats_json"));
 
-  for (const repo of repos) {
+  for (const repo of cheats) {
     const cheat = document.createElement("div");
 
     cheat.className = "cheat";
@@ -105,6 +98,24 @@ document.getElementById("repos-button").addEventListener("click", async () => {
   const topContainer = document.querySelector(".top-container .content");
 
   topContainer.innerHTML = "";
+
+  let repos = JSON.parse(await invoke("get_cheats_json"));
+
+  for (const repo of repos) {
+    if (repo.type == "local") {
+      const cheat = document.createElement("div");
+
+      cheat.className = "cheat";
+
+      const name = document.createElement("p");
+
+      name.textContent = repo.path.split("\\").reverse()[0];
+
+      cheat.appendChild(name);
+
+      topContainer.appendChild(cheat);
+    }
+  }
 });
 
 document.getElementById("notifications-button").addEventListener("click", async () => {
