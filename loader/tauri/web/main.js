@@ -1,13 +1,25 @@
 const { invoke } = window.__TAURI__.tauri;
 
-document.getElementById("home-button").addEventListener("click", async () => {
+async function clearPage() {
   const topContainer = document.querySelector(".top-container .content");
 
   topContainer.innerHTML = "";
 
-  let cheats = JSON.parse(await invoke("get_cheats_json"));
+  const updateAllButton = document.getElementById("update-all-button");
 
-  for (const repo of cheats) {
+  if (updateAllButton != null) {
+    updateAllButton.remove();
+  }
+
+  return topContainer;
+}
+
+document.getElementById("home-button").addEventListener("click", async () => {
+  const topContainer = await clearPage();
+
+  let repos = JSON.parse(await invoke("get_cheats_json"));
+
+  for (const repo of repos) {
     const cheat = document.createElement("div");
 
     cheat.className = "cheat";
@@ -95,9 +107,25 @@ document.getElementById("home-button").addEventListener("click", async () => {
 });
 
 document.getElementById("repos-button").addEventListener("click", async () => {
-  const topContainer = document.querySelector(".top-container .content");
+  const topContainer = await clearPage();
 
-  topContainer.innerHTML = "";
+  const bottomRightContainer = document.querySelector(".bottom-container .right");
+
+  const updateAllButton = document.createElement("button");
+
+  updateAllButton.id = "update-all-button";
+
+  const updateAllIcon = document.createElement("img");
+
+  updateAllIcon.src = "../assets/images/update-svgrepo-com.svg";
+
+  updateAllButton.appendChild(updateAllIcon);
+
+  updateAllButton.addEventListener("click", async () => {
+    await invoke("update_all_repos");
+  });
+
+  bottomRightContainer.appendChild(updateAllButton);
 
   let repos = JSON.parse(await invoke("get_cheats_json"));
 
@@ -119,7 +147,5 @@ document.getElementById("repos-button").addEventListener("click", async () => {
 });
 
 document.getElementById("notifications-button").addEventListener("click", async () => {
-  const topContainer = document.querySelector(".top-container .content");
-
-  topContainer.innerHTML = "";
+  const topContainer = await clearPage();
 });

@@ -164,30 +164,27 @@ pub mod utils {
         }
     }
 
-    pub async fn update_all() -> serde_json::Value {
-        match std::fs::read_dir(format!("{}repositories", settings::PATH)) {
-            Ok(entries) => {
-                for entry in entries {
-                    if let Ok(entry) = entry {
-                        if entry.file_type().map(|ft| ft.is_dir()).unwrap_or(false)
-                            && entry.file_name().to_str().unwrap().starts_with("git.")
-                        {
-                            repo::update(entry.path().to_str().unwrap()).await;
-                        }
+    #[tauri::command]
+    pub async fn update_all_repos() -> String {
+        let cheats = serde_json::from_str::<Vec<serde_json::Value>>(
+            cheat::parser::get_cheats_json().await.as_str(),
+        )
+        .unwrap();
+
+        for cheat in cheats {
+            if let Some(t) = cheat["type"].as_str() {
+                if t == "git" {
+                    if let Some(path) = cheat["path"].as_str() {
+                        repo::update(path).await;
                     }
                 }
-
-                serde_json::json!({
-                    "status": "success",
-                    "message": "Successfully updated all repositories"
-                })
-            }
-            Err(error) => {
-                serde_json::json!({
-                    "status": "error",
-                    "message": error.to_string()
-                })
             }
         }
+
+        serde_json::json!({
+            "status": "success",
+            "message": "Successfully updated all repositories"
+        })
+        .to_string()
     }
 }

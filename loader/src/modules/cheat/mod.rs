@@ -119,7 +119,7 @@ pub mod parser {
 
                 repo_json["path"] = serde_json::Value::String(path.to_str().unwrap().to_string());
 
-                repo_json["type"] = serde_json::Value::String(match git2::Repository::open(repo) {
+                repo_json["type"] = serde_json::Value::String(match git2::Repository::open(path) {
                     Ok(_) => "git".to_string(),
                     Err(_) => "local".to_string(),
                 });

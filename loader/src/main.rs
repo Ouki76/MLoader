@@ -12,7 +12,8 @@ async fn main() {
         .invoke_handler(tauri::generate_handler![
             modules::cheat::parser::get_cheats_json,
             modules::cheat::lua::run_script,
-            modules::utils::fs::get_file_content
+            modules::utils::fs::get_file_content,
+            modules::git::utils::update_all_repos
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
