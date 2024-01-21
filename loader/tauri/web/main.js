@@ -127,22 +127,20 @@ document.getElementById("repos-button").addEventListener("click", async () => {
 
   bottomRightContainer.appendChild(updateAllButton);
 
-  let repos = JSON.parse(await invoke("get_cheats_json"));
+  let repos = await invoke("get_all_repos");
 
   for (const repo of repos) {
-    if (repo.type == "local") {
-      const cheat = document.createElement("div");
+    const cheat = document.createElement("div");
 
-      cheat.className = "cheat";
+    cheat.className = "cheat";
 
-      const name = document.createElement("p");
+    const name = document.createElement("p");
 
-      name.textContent = repo.path.split("\\").reverse()[0];
+    name.textContent = repo.split("\\").reverse()[0];
 
-      cheat.appendChild(name);
+    cheat.appendChild(name);
 
-      topContainer.appendChild(cheat);
-    }
+    topContainer.appendChild(cheat);
   }
 });
 

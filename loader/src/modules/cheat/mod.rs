@@ -78,7 +78,6 @@ pub mod lua {
 }
 
 pub mod parser {
-
     use crate::modules::loader::settings;
     use walkdir::WalkDir;
 

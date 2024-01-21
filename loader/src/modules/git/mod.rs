@@ -114,12 +114,10 @@ pub mod repo {
 
 pub mod utils {
     use git2;
+    use walkdir::WalkDir;
 
     use super::repo;
-    use crate::modules::{
-        cheat::{self, parser},
-        loader::settings,
-    };
+    use crate::modules::loader::settings;
 
     pub async fn add(url: &str) -> serde_json::Value {
         repo::clone(url).await;
@@ -165,20 +163,26 @@ pub mod utils {
     }
 
     #[tauri::command]
-    pub async fn update_all_repos() -> String {
-        let cheats = serde_json::from_str::<Vec<serde_json::Value>>(
-            cheat::parser::get_cheats_json().await.as_str(),
-        )
-        .unwrap();
+    pub async fn get_all_repos() -> Vec<String> {
+        let mut repos = Vec::<String>::new();
 
-        for cheat in cheats {
-            if let Some(t) = cheat["type"].as_str() {
-                if t == "git" {
-                    if let Some(path) = cheat["path"].as_str() {
-                        repo::update(path).await;
-                    }
-                }
+        for entry in WalkDir::new(format!("{}repositories", settings::PATH))
+            .into_iter()
+            .filter(|entry| entry.is_ok())
+            .map(|entry| entry.unwrap())
+        {
+            if entry.path().join(".git").is_dir() && git2::Repository::open(entry.path()).is_ok() {
+                repos.push(entry.path().display().to_string());
             }
+        }
+
+        repos
+    }
+
+    #[tauri::command]
+    pub async fn update_all_repos() -> String {
+        for cheat in get_all_repos().await {
+            repo::update(cheat.as_str()).await;
         }
 
         serde_json::json!({

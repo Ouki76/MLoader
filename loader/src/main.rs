@@ -13,7 +13,8 @@ async fn main() {
             modules::cheat::parser::get_cheats_json,
             modules::cheat::lua::run_script,
             modules::utils::fs::get_file_content,
-            modules::git::utils::update_all_repos
+            modules::git::utils::update_all_repos,
+            modules::git::utils::get_all_repos
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
